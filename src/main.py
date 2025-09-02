@@ -64,3 +64,15 @@ def mark_as_seen(item_id: str, source: str): #this function marks an item as pro
         con.commit() # Commit changes
     finally:
         con.close()
+        
+
+def pick_entry_id(entry) -> str: #this function picks a unique id for an RSS entry
+    "Choose a unique id for an RSS entry"
+    # prefer guid/id, else fallback to link, else published with title
+    return(
+        getattr(entry, "id", None)
+        or getattr(entry, "guid", None)
+        or getattr(entry, "link", None)
+        or f"{getattr(entry, 'published', '')}{getattr(entry, 'title', '')}"       
+    )
+    
