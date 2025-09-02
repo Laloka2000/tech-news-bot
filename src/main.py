@@ -59,7 +59,7 @@ def mark_as_seen(item_id: str, source: str): #this function marks an item as pro
     try:
         con.execute(
             "INSERT OR IGNORE INTO seen (id, source, saved_at) VALUES (?, ?, ?)",
-            (item_id, source, int(datatime.utcnow()timestamp()))
+            (item_id, source, int(datetime.utcnow().timestamp()))
         )
         con.commit() # Commit changes
     finally:
@@ -76,3 +76,31 @@ def pick_entry_id(entry) -> str: #this function picks a unique id for an RSS ent
         or f"{getattr(entry, 'published', '')}{getattr(entry, 'title', '')}"       
     )
     
+def fetch_news_from_feeds(name: str, url: str, limit: int = limit_per_source): 
+    "Parse a feed and return up to `limit` unseen entries"
+    # Parse the feed URL
+    feed_parser = feedparser.parse(url)
+    new_entries = [] # List to hold new entries
+    
+    #iterate over feed entries
+    for entry in feed_parser.entries:
+        uid = pick_entry_id(entry) # Pick a unique id for the entry
+        if not uid: 
+            continue # Skip if no unique id found
+        if is_seen(uid):
+            continue # Skip if already seen
+        
+        # keep a ligth dict with the bits we need
+        
+        new_entries.append({
+            "id": uid,
+            "title": getattr(entry, "title", "Untitled"),
+            "link": getattr(entry, "link", ""),
+            "published": getattr(entry, "published", ""),
+            "source": name
+        })
+        
+        if len(new_entries) >= limit:
+            break
+        
+    return new_entries # Return the list of new entries
