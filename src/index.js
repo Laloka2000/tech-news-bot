@@ -6,13 +6,13 @@ import axios from "axios";
 import schedule from "node-schedule";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config(); 
 
-const bot_token = process.env.bot_token;
+const bot_token = process.env.bot_token; 
 const chat_id = process.env.chat_id;
 const db_path = path.join("data", "seen.sqlite3");
 
-const parser = new RSSParser();
+const parser = new RSSParser(); 
 
 // -------- database setup --------
 
@@ -33,15 +33,17 @@ function isSeen(id) {
 
 function markAsSeen(id, source) {
   db.prepare(
-    "INSERT OR IGNORE INTO seen(id, source, saved_at) VALUES (?, ?, ?)"
+    "INSERT OR IGNORE INTO seen(id, feed_source, saved_at) VALUES (?, ?, ?)"
   ).run(id, source, Math.floor(Date.now() / 1000));
 }
 
 // ------- feeds -------
 
 const feeds = [
-  //["ByteByteGo", "https://bytebytego.com/feed"],
-  ["Free Code Camp", "https://www.freecodecamp.org/news/rss/"],
+  ["freeCodeCamp", "https://www.freecodecamp.org/news/rss/"],
+  ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
+  ["web.dev", "https://web.dev/static/blog/feed.xml"],
+  ["Software Engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"]
 ];
 
 // ------- Telegram -------
@@ -92,4 +94,5 @@ async function runOnce() {
 }
 
 // ------- schedule -------*
-schedule.scheduleJob("39 14 * * *",runOnce);
+schedule.scheduleJob("0 9 * * *",runOnce);
+//runOnce();
