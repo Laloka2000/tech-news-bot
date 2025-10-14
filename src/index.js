@@ -6,26 +6,28 @@ import axios from "axios";
 import schedule from "node-schedule";
 import dotenv from "dotenv";
 
-dotenv.config(); 
+dotenv.config();
 
-const bot_token = process.env.bot_token; 
+const bot_token = process.env.bot_token;
 const chat_id = process.env.chat_id;
 const db_path = path.join("data", "seen.sqlite3");
 
-const parser = new RSSParser(); 
+const parser = new RSSParser();
 
 // -------- database setup --------
 
 if (!fs.existsSync("data")) fs.mkdirSync("data");
 const db = new Database(db_path);
 
-db.prepare(`
+db.prepare(
+  `
   CREATE TABLE IF NOT EXISTS seen (
     id TEXT PRIMARY KEY,
     feed_source TEXT,
     saved_at INTEGER
   )
-`).run();
+`
+).run();
 
 function isSeen(id) {
   return !!db.prepare("SELECT 1 FROM seen WHERE id = ?").get(id);
@@ -41,9 +43,12 @@ function markAsSeen(id, source) {
 
 const feeds = [
   ["freeCodeCamp", "https://www.freecodecamp.org/news/rss/"],
-  ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
+  //  ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
   ["web.dev", "https://web.dev/static/blog/feed.xml"],
-  ["Software Engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"]
+  [
+    "Software Engineering Daily",
+    "https://softwareengineeringdaily.com/feed/podcast/",
+  ],
 ];
 
 // ------- Telegram -------
@@ -94,5 +99,17 @@ async function runOnce() {
 }
 
 // ------- schedule -------*
-schedule.scheduleJob("0 9 * * *",runOnce);
-//runOnce(); // For quick testing 
+
+schedule.scheduleJob(
+  {
+    hour: 10,
+    minute: 0,
+    dayOfWeek: 1,
+    tz: "Europe/Budapest",
+  },
+  () => {
+    runOnce();
+  }
+);
+
+//runOnce(); // For quick testing
