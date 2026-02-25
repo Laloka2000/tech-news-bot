@@ -3,7 +3,6 @@ import path from "path";
 import RSSParser from "rss-parser";
 import Database from "better-sqlite3";
 import axios from "axios";
-import schedule from "node-schedule";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -43,12 +42,9 @@ function markAsSeen(id, source) {
 
 const feeds = [
   ["freeCodeCamp", "https://www.freecodecamp.org/news/rss/"],
-  //  ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
+  ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
   ["web.dev", "https://web.dev/static/blog/feed.xml"],
-  [
-    "Software Engineering Daily",
-    "https://softwareengineeringdaily.com/feed/podcast/",
-  ],
+  ["Software Engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"],
 ];
 
 // ------- Telegram -------
@@ -98,18 +94,10 @@ async function runOnce() {
   console.log(`Sent ${freshItems.length} new items.`);
 }
 
-// ------- schedule -------*
-
-schedule.scheduleJob(
-  {
-    hour: 10,
-    minute: 0,
-    dayOfWeek: 1,
-    tz: "Europe/Budapest",
-  },
-  () => {
-    runOnce();
-  }
-);
-
-//runOnce(); // For quick testing
+runOnce().then(()=> {
+  console.log("Finished successfully, the news has been sent to you!");
+  process.exit();
+}).catch((err) => {
+  console.log("Error:", err);
+  process.exit(1);
+})

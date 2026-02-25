@@ -15,7 +15,6 @@
     "axios": "^1.11.0",
     "better-sqlite3": "^12.2.0",
     "dotenv": "^17.2.2",
-    "node-schedule": "^2.1.1",
     "rss-parser": "^3.13.0"
   }
 }
