@@ -1,0 +1,28 @@
+name: Weekly Tech Newsletter
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # Every Monday 9:00 UTC
+  workflow_dispatch:       # manual trigger button
+
+jobs:
+  send-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run newsletter script
+        run: node src/index.js
+        env:
+          bot_token: ${{ secrets.bot_token }}
+          chat_id: ${{ secrets.chat_id }}
