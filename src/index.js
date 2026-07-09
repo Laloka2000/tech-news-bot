@@ -43,8 +43,7 @@ function markAsSeen(id, source) {
 const feeds = [
   ["freeCodeCamp", "https://www.freecodecamp.org/news/rss/"],
   ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
-  ["web.dev", "https://web.dev/static/blog/feed.xml"],
-  ["Software Engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"],
+  ["Marc Lou Beehiv", "https://rss.beehiiv.com/feeds/eFrYnr889a.xml"],
 ];
 
 // ------- Telegram -------
