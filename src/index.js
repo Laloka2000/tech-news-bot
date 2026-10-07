@@ -4,6 +4,7 @@ import RSSParser from "rss-parser";
 import Database from "better-sqlite3";
 import axios from "axios";
 import dotenv from "dotenv";
+import { escape } from "querystring";
 
 dotenv.config();
 
@@ -47,15 +48,20 @@ const feeds = [
 ];
 
 // ------- Telegram -------
+function escapeHtml(str = "") {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+}
 
 async function sendTelegramMessage(text) {
   const url = `https://api.telegram.org/bot${bot_token}/sendMessage`;
-  await axios.get(url, {
-    params: {
-      chat_id: chat_id,
-      text,
-      disable_web_page_preview: true,
-    },
+  await axios.post(url, {
+    chat_id,
+    text,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
   });
 }
 
@@ -72,7 +78,7 @@ async function runOnce() {
 
       freshItems.push({
         source: name,
-        title: entry.title,
+        title: entry.title?.trim(),
         link: entry.link,
         id,
       });
@@ -86,8 +92,14 @@ async function runOnce() {
   }
 
   const msg =
-    `🗞️ Daily picks\n\n` +
-    freshItems.map((i) => `• ${i.title}\n  ${i.link}`).join("\n\n");
+    `🗞️ <b>Daily picks</b>\n\n` +
+    freshItems
+      .map(
+        (i) => 
+          `📌 <b>${escapeHtml(i.title)}</b>\n` + 
+        `<i>${escapeHtml(i.source)}</i> - <a href="${escapeHtml(i.link)}">Olvasd el</a>`
+      )
+      .join("\n\n");
 
   await sendTelegramMessage(msg);
   console.log(`Sent ${freshItems.length} new items.`);
@@ -97,6 +109,6 @@ runOnce().then(()=> {
   console.log("Finished successfully, the news has been sent to you!");
   process.exit();
 }).catch((err) => {
-  console.log("Error:", err);
+  console.log("Error:", err.response?.data ?? err.message);
   process.exit(1);
 })
