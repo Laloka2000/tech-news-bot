@@ -45,6 +45,9 @@ const feeds = [
   ["freeCodeCamp", "https://www.freecodecamp.org/news/rss/"],
   ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
   ["Marc Lou Beehiv", "https://rss.beehiiv.com/feeds/eFrYnr889a.xml"],
+  ["JetBrains Blog", "https://blog.jetbrains.com/feed/"],
+  ["The Pragmatic Engineer", "https://feeds.feedburner.com/ThePragmaticEngineer"],
+  ["Software engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"],
 ];
 
 // ------- Telegram -------
