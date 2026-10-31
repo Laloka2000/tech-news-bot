@@ -46,7 +46,7 @@ const feeds = [
   ["Prog.hu", "https://prog.hu/site/backend/proghu-rss.xml"],
   ["Marc Lou Beehiv", "https://rss.beehiiv.com/feeds/eFrYnr889a.xml"],
   ["JetBrains Blog", "https://blog.jetbrains.com/feed/"],
-  ["The Pragmatic Engineer", "https://feeds.feedburner.com/ThePragmaticEngineer"],
+  ["The Pragmatic Engineer", "https://blog.pragmaticengineer.com/rss/"],
   ["Software engineering Daily", "https://softwareengineeringdaily.com/feed/podcast/"],
 ];
 
